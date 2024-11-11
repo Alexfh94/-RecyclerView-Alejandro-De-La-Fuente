@@ -1,6 +1,8 @@
 package com.example.tema3ej10;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ContactoAdapter.OnItemClickListener  {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,17 +53,27 @@ public class MainActivity extends AppCompatActivity {
         }));
 
 
-        // Crear el adaptador
-        ContactoAdapter ContactoAdapter = new ContactoAdapter(ContactoArrayList);
+        // Crear el adaptador y establecer el listener
+        ContactoAdapter contactoAdapter = new ContactoAdapter(ContactoArrayList);
+        contactoAdapter.setOnItemClickListener(this); // Establecemos el listener
 
         // Instanciar el RecyclerView
         RecyclerView rvContactos = findViewById(R.id.rv_contactos);
 
-        // Opcionalmente podríamos modificar el tipo de LayoutManager
+        // Configurar el LayoutManager
         rvContactos.setLayoutManager(new LinearLayoutManager(this));
 
         // Asignar el adaptador al RecyclerView
-        rvContactos.setAdapter(ContactoAdapter);
+        rvContactos.setAdapter(contactoAdapter);
+    }
 
+    // Implementación de la interfaz OnItemClickListener
+    @Override
+    public void onItemClick(View view, int position) {
+        Contacto contacto = ((ContactoAdapter) ((RecyclerView) findViewById(R.id.rv_contactos)).getAdapter()).coleccion.get(position);
+        String mensaje = "Contacto: " + contacto.getNombre() + " " + contacto.getApellidos() +
+                "\nTel: " + contacto.getTelefono() +
+                " Email: " + contacto.getEmail();
+        Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show();
     }
 }
